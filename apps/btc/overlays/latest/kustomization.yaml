@@ -4,8 +4,10 @@ kind: Kustomization
 namespace: btc
 nameSuffix: -latest
 
-commonLabels:
-  instance: latest
+labels:
+  - includeSelectors: true
+    pairs:
+      instance: latest
 
 resources:
   - ../../base
@@ -15,30 +17,28 @@ images:
     newTag: 31.1-1
 
 patches:
-  - target:
-      kind: Service
-      name: btc
-    patch: |-
+  - patch: |-
       - op: add
         path: /spec/externalIPs
         value:
           - 10.1.13.221
-
-  - target:
+    target:
+      kind: Service
+      name: btc
+  - patch: |-
+      - op: add
+        path: /spec/externalIPs
+        value:
+          - 10.1.13.221
+    target:
       kind: Service
       name: btc-external
-    patch: |-
-      - op: add
-        path: /spec/externalIPs
-        value:
-          - 10.1.13.221
-
-  - target:
-      kind: Deployment
-      name: btc
-    patch: |-
+  - patch: |-
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
           name: ADDNODE
           value: "10.1.13.222:8333 10.1.13.223:8333"
+    target:
+      kind: Deployment
+      name: btc
