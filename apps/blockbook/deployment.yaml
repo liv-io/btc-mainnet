@@ -26,7 +26,7 @@ spec:
           protocol: TCP
         env:
         - name: MESSAGE_QUEUE_BINDING
-          value: "tcp://btc-external-stable.btc.svc.cluster.local:5555"
+          value: "tcp://btc-external-stable.btc.svc.cluster.local:5558"
         - name: PORT
           value: "8080"
         - name: RPC_PASS
