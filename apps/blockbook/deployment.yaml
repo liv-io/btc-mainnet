@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: blockbook
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: blockbook
+  template:
+    metadata:
+      labels:
+        app: blockbook
+    spec:
+      containers:
+      - name: blockbook
+        image: registry.liv.io/liv/blockbook
+        workingDir: /usr/local/share/blockbook
+        ports:
+        - name: blockbook
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: MESSAGE_QUEUE_BINDING
+          value: "tcp://btc-external-stable.btc.svc.cluster.local:5555"
+        - name: PORT
+          value: "8080"
+        - name: RPC_PASS
+          valueFrom:
+            secretKeyRef:
+              name: blockbook-secrets
+              key: RPC_PASS
+        - name: RPC_URL
+          value: "http://btc-external-stable.btc.svc.cluster.local:8332"
+        - name: RPC_USER
+          value: "satoshi"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsGroup: 10000
+          runAsUser: 10000
+          seLinuxOptions:
+            type: spc_t
+        volumeMounts:
+        - name: blockbook-config
+          mountPath: /var/local/blockbook/config
+        - name: blockbook-db
+          mountPath: /var/local/blockbook/db
+      imagePullSecrets:
+      - name: registry.liv.io
+      volumes:
+      - name: blockbook-config
+        emptyDir:
+          sizeLimit: 1Mi
+      - name: blockbook-db
+        persistentVolumeClaim:
+          claimName: blockbook-pvc

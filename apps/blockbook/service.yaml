@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: blockbook
+
+spec:
+  type: ClusterIP
+  ports:
+  - name: blockbook
+    port: 8080
+    targetPort: blockbook
+    protocol: TCP
+  selector:
+    app: blockbook
