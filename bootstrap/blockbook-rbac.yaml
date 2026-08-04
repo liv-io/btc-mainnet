@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ServiceAccount
+
+metadata:
+  name: blockbook-deployer
+  namespace: blockbook
+
+---
+
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: blockbook-deployer-token
+  namespace: blockbook
+  annotations:
+    kubernetes.io/service-account.name: blockbook-deployer
+
+type: kubernetes.io/service-account-token
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: blockbook-deployer-binding
+  namespace: blockbook
+
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+
+subjects:
+- kind: ServiceAccount
+  name: blockbook-deployer
+  namespace: blockbook

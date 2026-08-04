@@ -7,3 +7,4 @@ resources:
   - btc-rbac.yaml
   - btcd-rbac.yaml
   - lnd-rbac.yaml
+  - blockbook-rbac.yaml
