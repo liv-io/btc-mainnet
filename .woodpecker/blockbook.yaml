@@ -1,0 +1,61 @@
+when:
+  - path:
+      include:
+        - '.woodpecker/blockbook.yaml'
+        - 'apps/blockbook/**'
+
+clone:
+  - name: git
+    image: woodpeckerci/plugin-git
+    volumes:
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+
+steps:
+  - name: lint
+    image: registry.liv.io/liv/k8s-ops:1.36.2-1
+    environment:
+      KUBECONFIG_DATA:
+        from_secret: blockbook-deployer
+      RPC_PASS:
+        from_secret: blockbook_rpc_pass
+    commands:
+      - install --owner=k8s --group=k8s --mode=0600 /dev/null ~/.kubeconfig
+      - echo "$${KUBECONFIG_DATA}" > ~/.kubeconfig
+      - export KUBECONFIG=~/.kubeconfig
+
+      - >-
+        kubectl create secret generic blockbook-secrets
+        --namespace=blockbook
+        --from-literal=RPC_PASS="$${RPC_PASS}"
+        --dry-run=client -o yaml | kubectl apply --dry-run=client -f -
+
+      - kubectl apply -k ./apps/blockbook/ --dry-run=client
+      - kubectl apply -k ./apps/blockbook/ --dry-run=server
+
+  - name: deploy
+    image: registry.liv.io/liv/k8s-ops:1.36.2-1
+    environment:
+      KUBECONFIG_DATA:
+        from_secret: blockbook-deployer
+      RPC_PASS:
+        from_secret: blockbook_rpc_pass
+    when:
+      - event: push
+        branch: main
+    commands:
+      - install --owner=k8s --group=k8s --mode=0600 /dev/null ~/.kubeconfig
+      - echo "$${KUBECONFIG_DATA}" > ~/.kubeconfig
+      - export KUBECONFIG=~/.kubeconfig
+
+      - >-
+        kubectl create secret generic blockbook-secrets
+        --namespace=blockbook
+        --from-literal=RPC_PASS="$${RPC_PASS}"
+        --dry-run=client -o yaml | kubectl apply -f -
+
+      - kubectl apply -k ./apps/blockbook/
+      - kubectl rollout status -n blockbook deployment/blockbook --timeout=90s
+      - kubectl get deployment blockbook -n blockbook -o jsonpath='{.spec.template.spec.containers[*].image}'
+
+labels:
+  platform: linux/amd64
