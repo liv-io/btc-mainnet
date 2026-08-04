@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: btcd
+nameSuffix: -latest
+
+labels:
+  - includeSelectors: true
+    pairs:
+      instance: latest
+
+resources:
+  - ../../base
+
+images:
+  - name: registry.liv.io/liv/btcd
+    newTag: 0.26.2-2
+
+patches:
+  - patch: |-
+      - op: add
+        path: /spec/externalIPs
+        value:
+          - 10.1.13.223
+    target:
+      kind: Service
+      name: btcd
+  - patch: |-
+      - op: add
+        path: /spec/externalIPs
+        value:
+          - 10.1.13.223
+    target:
+      kind: Service
+      name: btcd-external
+  - patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: ADDPEER
+          value: "10.1.13.221:8333 10.1.13.222:8333"
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: EXTERNALIP
+          value: "213.193.83.253"
+    target:
+      kind: Deployment
+      name: btcd
