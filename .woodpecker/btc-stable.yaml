@@ -2,6 +2,7 @@ when:
   - path:
       include:
         - '.woodpecker/btc-stable.yaml'
+        - 'apps/btc/base/**'
         - 'apps/btc/overlays/stable/**'
 
 clone:
