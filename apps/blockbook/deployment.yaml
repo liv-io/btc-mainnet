@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: blockbook
-        image: registry.liv.io/liv/blockbook
+        image: code.liv.io/liv/blockbook
         workingDir: /usr/local/share/blockbook
         ports:
         - name: blockbook
@@ -58,7 +58,7 @@ spec:
         - name: blockbook-db
           mountPath: /var/local/blockbook/db
       imagePullSecrets:
-      - name: registry.liv.io
+      - name: code.liv.io
       volumes:
       - name: blockbook-config
         emptyDir:

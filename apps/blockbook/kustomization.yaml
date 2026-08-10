@@ -10,5 +10,5 @@ resources:
   - ingress.yaml
 
 images:
-  - name: registry.liv.io/liv/blockbook
+  - name: code.liv.io/liv/blockbook
     newTag: 0.6.0-1

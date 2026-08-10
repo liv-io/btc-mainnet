@@ -13,7 +13,7 @@ resources:
   - ../../base
 
 images:
-  - name: registry.liv.io/liv/btcd
+  - name: code.liv.io/liv/btcd
     newTag: 0.26.2-2
 
 patches:

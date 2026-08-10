@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: btcd
-        image: registry.liv.io/liv/btcd
+        image: code.liv.io/liv/btcd
         workingDir: /
         ports:
         - name: btcd-network
@@ -57,7 +57,7 @@ spec:
         - name: btcd-db
           mountPath: /home/btcd/.btcd
       imagePullSecrets:
-      - name: registry.liv.io
+      - name: code.liv.io
       volumes:
       - name: btcd-db
         persistentVolumeClaim:

@@ -13,7 +13,7 @@ resources:
   - ../../base
 
 images:
-  - name: registry.liv.io/liv/bitcoin-core
+  - name: code.liv.io/liv/bitcoin-core
     newTag: 27.2-1
 
 patches:
