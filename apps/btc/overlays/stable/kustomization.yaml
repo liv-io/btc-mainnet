@@ -24,7 +24,7 @@ patches:
           - 10.1.13.222
     target:
       kind: Service
-      name: btc
+      name: int
   - patch: |-
       - op: add
         path: /spec/externalIPs
@@ -32,7 +32,7 @@ patches:
           - 10.1.13.222
     target:
       kind: Service
-      name: btc-external
+      name: ext
   - patch: |-
       - op: add
         path: /spec/template/spec/containers/0/env/-

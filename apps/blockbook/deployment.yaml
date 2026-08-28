@@ -19,6 +19,7 @@ spec:
       containers:
       - name: blockbook
         image: code.liv.io/liv/blockbook
+        imagePullPolicy: IfNotPresent
         workingDir: /usr/local/share/blockbook
         ports:
         - name: blockbook
@@ -26,7 +27,7 @@ spec:
           protocol: TCP
         env:
         - name: MESSAGE_QUEUE_BINDING
-          value: "tcp://btc-external-stable.btc.svc.cluster.local:5558"
+          value: "tcp://ext-stable.btc:5558"
         - name: PORT
           value: "8080"
         - name: RPC_PASS
@@ -35,34 +36,30 @@ spec:
               name: blockbook-secrets
               key: RPC_PASS
         - name: RPC_URL
-          value: "http://btc-external-stable.btc.svc.cluster.local:8332"
+          value: "http://ext-stable.btc:8332"
         - name: RPC_USER
           value: "satoshi"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - CAP_MKNOD
-            - CAP_NET_RAW
-            - CAP_AUDIT_WRITE
+            - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsGroup: 10000
           runAsUser: 10000
-          seLinuxOptions:
-            type: spc_t
         volumeMounts:
-        - name: blockbook-config
+        - name: config
           mountPath: /var/local/blockbook/config
-        - name: blockbook-db
+        - name: db
           mountPath: /var/local/blockbook/db
       imagePullSecrets:
       - name: code.liv.io
       volumes:
-      - name: blockbook-config
+      - name: config
         emptyDir:
           sizeLimit: 1Mi
-      - name: blockbook-db
+      - name: db
         persistentVolumeClaim:
-          claimName: blockbook-pvc
+          claimName: db

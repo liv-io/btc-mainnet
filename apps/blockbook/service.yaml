@@ -9,7 +9,7 @@ spec:
   ports:
   - name: blockbook
     port: 8080
-    targetPort: blockbook
+    targetPort: 8080
     protocol: TCP
   selector:
     app: blockbook

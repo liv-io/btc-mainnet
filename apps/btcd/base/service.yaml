@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: btcd
+  name: int
 
 spec:
   type: ClusterIP
   ports:
-  - name: btcd-network
+  - name: network
     port: 8333
-    targetPort: btcd-network
+    targetPort: 8333
     protocol: TCP
   selector:
     app: btcd
@@ -20,15 +20,15 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: btcd-external
+  name: ext
 
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   ports:
-  - name: btcd-rpc
+  - name: rpc
     port: 8334
-    targetPort: btcd-rpc
+    targetPort: 8334
     protocol: TCP
   selector:
     app: btcd

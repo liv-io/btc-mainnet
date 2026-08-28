@@ -2,22 +2,22 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: btc
+  name: int
 
 spec:
   type: ClusterIP
   ports:
-  - name: btc-network
+  - name: network
     port: 8333
-    targetPort: btc-network
+    targetPort: 8333
     protocol: TCP
-  - name: btc-zmqphblock
+  - name: zmqphblock
     port: 5555
-    targetPort: btc-zmqphblock
+    targetPort: 5555
     protocol: TCP
-  - name: btc-zmqphtx
+  - name: zmqphtx
     port: 5556
-    targetPort: btc-zmqphtx
+    targetPort: 5556
     protocol: TCP
   selector:
     app: btc
@@ -28,23 +28,23 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: btc-external
+  name: ext
 
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   ports:
-  - name: btc-rpc
+  - name: rpc
     port: 8332
-    targetPort: btc-rpc
+    targetPort: 8332
     protocol: TCP
-  - name: btc-zmqprblock
+  - name: zmqprblock
     port: 5557
-    targetPort: btc-zmqprblock
+    targetPort: 5557
     protocol: TCP
-  - name: btc-zmqprtx
+  - name: zmqprtx
     port: 5558
-    targetPort: btc-zmqprtx
+    targetPort: 5558
     protocol: TCP
   selector:
     app: btc

@@ -19,12 +19,13 @@ spec:
       containers:
       - name: btcd
         image: code.liv.io/liv/btcd
+        imagePullPolicy: IfNotPresent
         workingDir: /
         ports:
-        - name: btcd-network
+        - name: network
           containerPort: 8333
           protocol: TCP
-        - name: btcd-rpc
+        - name: rpc
           containerPort: 8334
           protocol: TCP
         env:
@@ -43,22 +44,18 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - CAP_MKNOD
-            - CAP_NET_RAW
-            - CAP_AUDIT_WRITE
+            - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsGroup: 10000
           runAsUser: 10000
-          seLinuxOptions:
-            type: spc_t
         volumeMounts:
-        - name: btcd-db
+        - name: db
           mountPath: /home/btcd/.btcd
       imagePullSecrets:
       - name: code.liv.io
       volumes:
-      - name: btcd-db
+      - name: db
         persistentVolumeClaim:
-          claimName: btcd-pvc
+          claimName: db
