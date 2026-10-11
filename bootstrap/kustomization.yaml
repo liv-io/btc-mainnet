@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - infra-rbac.yaml
-  - btc-rbac.yaml
+  - bitcoin-core-rbac.yaml
   - btcd-rbac.yaml
   - lnd-rbac.yaml
   - blockbook-rbac.yaml
