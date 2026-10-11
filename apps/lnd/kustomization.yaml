@@ -23,8 +23,6 @@ patches:
             containers:
               - name: lnd
                 env:
-                  - name: BITCOIN_NETWORK
-                    value: "testnet3"
                   - name: ALIAS
                     value: "liv.io"
                   - name: BITCOIND_RPCHOST
