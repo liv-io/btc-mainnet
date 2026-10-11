@@ -1,14 +1,60 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: blockbook
-
 resources:
-  - pvc.yaml
-  - service.yaml
-  - deployment.yaml
-  - ingress.yaml
+  - git@code.liv.io:liv/oci-manifests.git//blockbook?ref=main
 
 images:
-  - name: code.liv.io/liv/blockbook
+  - name: blockbook
+    newName: code.liv.io/liv/blockbook
     newTag: 0.6.0-1
+
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: db
+      spec:
+        resources:
+          requests:
+            storage: 2000Gi
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: blockbook
+      spec:
+        template:
+          spec:
+            imagePullSecrets:
+              - name: code.liv.io
+            containers:
+              - name: blockbook
+                env:
+                  - name: MESSAGE_QUEUE_BINDING
+                    value: "tcp://ext-stable.bitcoin-core:5558"
+                  - name: RPC_URL
+                    value: "http://ext-stable.bitcoin-core:8332"
+
+  - patch: |-
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: blockbook
+      spec:
+        tls:
+          - hosts:
+              - bb.liv.io
+        rules:
+          - host: bb.liv.io
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: blockbook
+                      port:
+                        number: 8080
