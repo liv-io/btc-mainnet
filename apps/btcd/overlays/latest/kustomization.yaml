@@ -1,49 +1,60 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: btcd
-nameSuffix: -latest
-
-labels:
-  - includeSelectors: true
-    pairs:
-      instance: latest
-
 resources:
   - ../../base
 
+namespace: btcd
+nameSuffix: -latest
+
 images:
-  - name: code.liv.io/liv/btcd
+  - name: btcd
+    newName: code.liv.io/liv/btcd
     newTag: 0.26.2-2
 
 patches:
   - patch: |-
-      - op: add
-        path: /spec/externalIPs
-        value:
-          - 10.1.13.223
-    target:
-      kind: Service
-      name: int
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: db
+      spec:
+        resources:
+          requests:
+            storage: 2000Gi
+
   - patch: |-
-      - op: add
-        path: /spec/externalIPs
-        value:
-          - 10.1.13.223
-    target:
-      kind: Service
-      name: ext
-  - patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/env/-
-        value:
-          name: ADDPEER
-          value: "10.1.13.221:8333 10.1.13.222:8333"
-      - op: add
-        path: /spec/template/spec/containers/0/env/-
-        value:
-          name: EXTERNALIP
-          value: "213.193.83.253"
-    target:
+      apiVersion: apps/v1
       kind: Deployment
-      name: btcd
+      metadata:
+        name: btcd
+      spec:
+        template:
+          spec:
+            imagePullSecrets:
+              - name: code.liv.io
+            containers:
+              - name: btcd
+                env:
+                  - name: ADDPEER
+                    value: "10.1.13.221:8333 10.1.13.222:8333"
+                  - name: EXTERNALIP
+                    value: "213.193.83.253"
+
+  - patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: int
+      spec:
+        externalIPs:
+          - 10.1.13.223
+
+  - patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: ext
+      spec:
+        externalIPs:
+          - 10.1.13.223
