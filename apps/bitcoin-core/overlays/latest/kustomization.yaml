@@ -7,6 +7,11 @@ resources:
 namespace: bitcoin-core
 nameSuffix: -latest
 
+labels:
+  - pairs:
+      app.kubernetes.io/instance: latest
+    includeSelectors: true
+
 images:
   - name: bitcoin-core
     newName: code.liv.io/liv/bitcoin-core
