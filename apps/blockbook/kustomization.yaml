@@ -7,7 +7,7 @@ resources:
 images:
   - name: blockbook
     newName: code.liv.io/liv/blockbook
-    newTag: 0.6.0-1
+    newTag: c6d8d181fb7645a15c655c5371bb7205af5f9086-1
 
 patches:
   - patch: |-
@@ -34,9 +34,9 @@ patches:
               - name: blockbook
                 env:
                   - name: MESSAGE_QUEUE_BINDING
-                    value: "tcp://ext-stable.bitcoin-core:5558"
+                    value: "tcp://ext-latest.bitcoin-core:5558"
                   - name: RPC_URL
-                    value: "http://ext-stable.bitcoin-core:8332"
+                    value: "http://ext-latest.bitcoin-core:8332"
 
   - patch: |-
       apiVersion: networking.k8s.io/v1
