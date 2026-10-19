@@ -15,7 +15,7 @@ labels:
 images:
   - name: bitcoin-core
     newName: code.liv.io/liv/bitcoin-core
-    newTag: 27.2-1
+    newTag: 29.4-1
 
 patches:
   - patch: |-
