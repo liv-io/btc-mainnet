@@ -7,7 +7,7 @@ resources:
 images:
   - name: blockbook
     newName: code.liv.io/liv/blockbook
-    newTag: c6d8d181fb7645a15c655c5371bb7205af5f9086-1
+    newTag: c6d8d181fb7645a15c655c5371bb7205af5f9086-2
 
 patches:
   - patch: |-
