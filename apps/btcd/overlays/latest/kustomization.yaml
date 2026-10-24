@@ -10,7 +10,7 @@ nameSuffix: -latest
 images:
   - name: btcd
     newName: code.liv.io/liv/btcd
-    newTag: 0.26.2-2
+    newTag: 0.27.0-1
 
 patches:
   - patch: |-
